@@ -1,6 +1,6 @@
 # React + Vite Starter
 
-[![GitHub stars](https://img.shields.io/github/stars/your-username/your-repo.svg?style=social)](https://github.com/your-username/your-repo/stargazers) [![GitHub issues](https://img.shields.io/github/issues/your-username/your-repo.svg)](https://github.com/your-username/your-repo/issues) [![License](https://img.shields.io/github/license/your-username/your-repo.svg)](https://github.com/your-username/your-repo/blob/main/LICENSE.md)
+[![GitHub stars](https://img.shields.io/github/stars/dev-rahmn/email-handler.svg?style=social)](https://github.com/dev-rahmn/email-handler/stargazers) [![GitHub issues](https://img.shields.io/github/issues/dev-rahmn/email-handler.svg)](https://github.com/dev-rahmn/email-handler/issues) [![License](https://img.shields.io/github/license/dev-rahmn/email-handler.svg)](https://github.com/dev-rahmn/email-handler/blob/main/LICENSE.md)
 
 
 > A minimal React setup powered by Vite, with Fast Refresh, ESLint, and an opinionated structure to get you up and running quickly.
@@ -80,7 +80,7 @@ Use this as a foundation for your production-ready React projects.
 
 1. **Clone the repo**
    ```bash
-   git clone https://github.com/your-username/your-repo.git
+   git clone https://github.com/dev-rahmn/email-handler.git
    ```
 2. **Install dependencies**
    ```bash
@@ -179,9 +179,9 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) fi
 👤 **Atiqur Rahman**
 
 - GitHub: [@rahmanateeq](https://github.com/rahmanateeq)
-- Email: youremail@example.com
+- Email: csatiqrahman@gmail.com
 
-Project Link: [https://github.com/your-username/your-repo](https://github.com/your-username/your-repo)
+Project Link: [https://github.com/dev-rahmn](https://github.com/dev-rahmn)
 
 ---
 
@@ -190,5 +190,5 @@ Project Link: [https://github.com/your-username/your-repo](https://github.com/yo
 - [Vite](https://vitejs.dev/)
 - [React](https://reactjs.org/)
 - [ESLint](https://eslint.org/)
-- [Shields.io](https://shields.io/) for badges
+
 
