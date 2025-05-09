@@ -165,9 +165,14 @@ const List = () => {
         uniqueRows.push(row);
       }
   
-      // Simulate progress if needed
-      await simulateProgress(0, 100, 3000, setProgress);
-  
+      // Phase 1: show “Filtering duplicates…” from 0 → 50%
+    setProcessingStep("Filtering duplicates...");
+    await simulateProgress(0, 50, 1500, setProgress);
+
+    // Phase 2: show “Filtering blocked emails…” from 50 → 100%
+    setProcessingStep("Filtering blocked emails...");
+    await simulateProgress(50, 100, 1500, setProgress);
+
       // Update state
       setDuplicateEmails(duplicateEmails);
       setBlockedEmails(blockedEmails);
@@ -178,13 +183,15 @@ const List = () => {
       alert("Error: " + e.message);
     } finally {
       setProcessingStep("Done!");
-      setTimeout(() => setIsProcessing(false), 500);
+      
+      setTimeout(() => setIsProcessing(false), 100);
     }
   };
 
   // CSV handlers
   const handleFileChange = (e) => {
     const f = e.target.files[0];
+    handleClearCSV();
     if (f?.type === "text/csv") processCSV(f);
     else alert("Please select a valid .csv file.");
   };
@@ -194,6 +201,7 @@ const List = () => {
     setHeaders([]);
     setDuplicateEmails([]);
     setBlockedEmails([]);
+    setListName("");
     setMode(null);
     fileInputRef.current.value = "";
   };
@@ -274,10 +282,15 @@ const List = () => {
 
   // Cell editor handlers
   const handleCellClick = (row, col) => {
-    console.log(row, col);
     if (!(mode === "edit" || mode === "new")) return;
     setCellEditor({ open: true, row, col, value: previewData[row][col] });
   };
+  /**
+   * Handles updating a cell in the preview data after the cell editor is confirmed.
+   * @param {number} row - Row index of the cell.
+   * @param {string} col - Column name of the cell.
+   * @param {string} value - New value of the cell.
+   */
   const handleCellUpdate = () => {
 
     const { row, col, value } = cellEditor;
@@ -320,11 +333,10 @@ const List = () => {
         </div>
         <div className="flex flex-col gap-y-4 md:flex-row md:gap-x-4">
           {/* Saved Lists */}
-          <motion.div
-            className="bg-white rounded-lg py-6 md:w-1/3 w-full overflow-auto max-h-[80vh] shadow-lg"
-            initial="hidden"
-            animate="visible"
-            variants={containerVariants}
+          <div
+            className="bg-white rounded-lg py-6 md:w-1/3 w-full overflow-auto max-h-[80vh] min-h-[80vh] shadow-lg
+             "
+            style={{ scrollbarWidth: "thin", scrollbarColor: "lightCyan darkCyan" }}
           >
             <h2 className="text-2xl font-semibold mb-4 mx-2">Your Lists</h2>
             {lists?.length === 0 ? (
@@ -351,7 +363,7 @@ const List = () => {
                               } w-6 h-6 text-gray-500 transition-transform duration-200`}
                             />
                           </Disclosure.Button>
-
+                             
                       <Disclosure.Panel className="p-2 bg-darkGrey rounded-b shadow-inner flex space-x-2">
                         <button
                           onClick={() => handlePreviewList(idx)}
@@ -381,13 +393,13 @@ const List = () => {
                 ))}
               </AnimatePresence>
             )}
-          </motion.div>
+          </div>
 
           {/* Preview / New CSV Panel */}
           <AnimatePresence>
             {previewData.length > 0 && mode && (
               <motion.div
-                className="bg-white flex flex-col rounded-lg p-2 md:w-2/3 w-full max-h-[80vh] shadow-lg"
+                className="bg-white flex flex-col rounded-lg p-2 md:w-2/3 w-full max-h-[80vh] min-h-[80vh]  shadow-lg"
                 initial="hidden"
                 animate="visible"
                 variants={previewPanelVariants}
@@ -403,13 +415,13 @@ const List = () => {
                     />
                   ) : (
                     <h3 className="text-2xl sm:text-xl font-semibold">
-                      Preview: {selectedFile.name}
+                      Preview: {selectedFile?.name}
                     </h3>
                   )}
                 </div>
 
                 {(mode === "new" || mode === "edit" || mode === "preview") && (
-                  <Disclosure as="div" className="rounded-md bg-darkGrey divide-y divide-red mx-2 my-4 border-2 border-cyan shadow-cyanShadow">
+                  <Disclosure as="div" className="rounded-lg bg-darkGrey divide-y divide-black mx-2 my-4 border-2 border-cyan shadow-cyanShadow">
                     {({ open }) => (
                       <>
                         <Disclosure.Button className="group flex w-full items-center justify-between px-4 py-2 ">
@@ -420,19 +432,19 @@ const List = () => {
                             }`}
                           />
                         </Disclosure.Button>
-
-                        <Disclosure.Panel className="px-2 pt-2 pb-4 space-y-4 max-h-60 overflow-auto">
+                        { (duplicateEmails?.length > 0 || blockedEmails?.length > 0)? (
+                           <Disclosure.Panel className="px-2 pt-2 pb-4 space-y-4 max-h-60 overflow-auto">
                           {duplicateEmails.length > 0 && (
-                            <div>
+                            <Disclosure.Panel>
                               <h4 className="font-bold py-1 text-black px-4 rounded-lg bg-white">
                                 Duplicate Emails [{duplicateEmails.length}]
                               </h4>
-                              <ul className="list-disc list-inside text-sm text-orange">
+                              <ul className="list-disc pt-2  px-4 list-inside text-md text-orange">
                                 {duplicateEmails.map((email, idx) => (
                                   <li key={`dup-${idx}`}>{email}</li>
                                 ))}
                               </ul>
-                            </div>
+                            </Disclosure.Panel>
                           )}
 
                           {blockedEmails.length > 0 && (
@@ -440,7 +452,7 @@ const List = () => {
                               <h4 className="font-bold py-1 text-black px-4 rounded-lg bg-white">
                                 Blocked Emails [{blockedEmails.length}]
                               </h4>
-                              <ul className="list-disc list-inside text-sm text-orange">
+                              <ul className="list-disc pt-2 px-4 list-inside text-md text-orange">
                                 {blockedEmails.map((email, idx) => (
                                   <li key={`blk-${idx}`}>{email}</li>
                                 ))}
@@ -448,22 +460,32 @@ const List = () => {
                             </div>
                           )}
                         </Disclosure.Panel>
+                         ) : (
+                           <Disclosure.Panel className="px-2 pt-2 pb-4 space-y-4 max-h-60 overflow-auto">
+                             <h4 className="font-bold py-1 text-black px-4 rounded-lg bg-white">
+                               No duplicate or blocked emails found
+                             </h4>
+                           </Disclosure.Panel>
+                         )}
+                        
                       </>
                     )}
                   </Disclosure>
                 )}
                 {/* Table */}
-                <div className="flex-1 overflow-auto px-6 ">
+                <div className="flex-1 overflow-auto  px-6 "
+                 style={{ scrollbarWidth: "thin", scrollbarColor: "blue lightGrey" }}
+                >
                   <table className="min-w-full border-collapse">
                     <thead>
                       <tr>
-                        <th className="sticky top-0 z-10 border px-2 py-1 bg-lightGrey text-left">
+                        <th className="sticky top-0 z-2 border px-2 py-1 bg-lightGrey text-left">
                           S. No
                         </th>
                         {headers.map((h, i) => (
                           <th
                             key={i}
-                            className="sticky top-0 z-10 border px-2 py-1 bg-lightGrey text-left"
+                            className="sticky top-0 z-2 border px-2 py-1 bg-lightGrey text-left"
                           >
                             {h}
                           </th>
@@ -490,19 +512,19 @@ const List = () => {
                 </div>
 
                 {/* Panel Footer */}
-                <div className="flex-none border-t py-1 px-2 border-lightOrange flex justify-end space-x-4 rounded-lg bg-darkGrey divide-y divide-orange m-2">
+                <div className="flex-none border-t items-center  p-2 border-lightOrange flex justify-end space-x-4 rounded-lg bg-darkGrey divide-y divide-orange m-2">
                   {mode === "new" && (
                     <>
                       {" "}
                       <motion.button
                         onClick={handleCreateClick}
-                        className="px-4 py-1 mt-2 bg-lightGreen text-white rounded"
+                        className="px-4 py-1 mt-2 bg-lightGreen text-white rounded hover:bg-green hover:shadow-lightOrange "
                       >
                         Create List
                       </motion.button>
                       <motion.button
                         onClick={handleClearCSV}
-                        className="px-4 py-1 mt-2 bg-grey text-white rounded"
+                        className="px-4 py-1 mt-2 bg-grey text-white rounded hover:bg-lightBrown hover:text-black"
                       >
                         Clear CSV
                       </motion.button>
@@ -511,7 +533,7 @@ const List = () => {
                   {mode === "preview" && (
                     <motion.button
                       onClick={handleCancel}
-                      className="px-4 py-1 bg-red text-white mt-2 rounded"
+                      className="px-4 py-1 bg-red text-white mt-2 rounded hover:bg-lightRed hover:text-black"
                     >
                       close
                     </motion.button>
@@ -521,13 +543,13 @@ const List = () => {
                       {" "}
                       <motion.button
                         onClick={handleSaveChanges}
-                        className="px-2 py-1 mt-2 bg-lightGreen text-white rounded"
+                        className="px-2 py-1 mt-2 bg-lightGreen text-white rounded  hover:bg-green hover:shadow-lightOrange "
                       >
                         Save Changes
                       </motion.button>
                       <motion.button
                         onClick={handleCancel}
-                        className="px-2 py-1 mt-2 bg-grey text-white rounded"
+                        className="px-2 py-1 mt-2 bg-grey text-white rounded  hover:bg-lightBrown hover:text-black"
                       >
                         Cancel
                       </motion.button>
@@ -555,7 +577,7 @@ const List = () => {
                 >
                   <h4 className="text-lg font-semibold mb-4">Edit Cell</h4>
                   <input
-                    type={isNaN(cellEditor.value) ? "text" : "number"}
+                    type="text"
                     value={cellEditor.value}
                     onChange={(e) =>
                       setCellEditor((prev) => ({
