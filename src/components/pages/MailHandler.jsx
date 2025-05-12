@@ -159,7 +159,7 @@ const MailHandler = () => {
   
   
       setCurrentIndex(i + 1);
-      // await new Promise((res) => setTimeout(res, 0));
+      await new Promise((res) => setTimeout(res, 100));
     }
   
     setIsSending(false);
@@ -185,7 +185,8 @@ const MailHandler = () => {
               <li
                 key={index}
                 onClick={() => handleFileSelect(file)}
-                className={`cursor-pointer p-2 rounded-md mb-1 border border-lightBrown hover:border-darkCyan transition-colors hover:bg-lightGrey ${
+                className={`cursor-pointer p-2 rounded-md mb-1 border bg-darkBrown border-lightBrown shadow-inner shadow-lightOrange hover:shadow-cyanShadow hover:text-black
+                   hover:border-darkCyan transition-colors hover:bg-ultraLightGreen ${
                   selectedFile === file
                     ? "bg-lightCyan text-black hover:bg-darkCyan hover:text-blue"
                     : "text-white hover:bg-lightGrey"

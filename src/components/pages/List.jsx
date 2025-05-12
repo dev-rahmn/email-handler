@@ -34,34 +34,34 @@ const staticBlockedEmails = [
   "Elias.Reichel@gmail.com",
   "ivian.Schimmel85@yahoo.com",
 ];
-const removeDuplicatesAPI = (emails) =>
-  new Promise((resolve) =>
-    setTimeout(() => {
-      const seen = new Set();
-      const unique = [];
-      const duplicates = [];
-      emails.forEach((email) => {
-        if (seen.has(email)) duplicates.push(email);
-        else {
-          seen.add(email);
-          unique.push(email);
-        }
-      });
-      resolve({ unique, duplicates });
-    }, 5000)
-  );
-const filterBlockedAPI = (emails) =>
-  new Promise((resolve) =>
-    setTimeout(() => {
-      const allowed = [];
-      const blocked = [];
-      emails.forEach((email) => {
-        if (staticBlockedEmails.includes(email)) blocked.push(email);
-        else allowed.push(email);
-      });
-      resolve({ allowed, blocked });
-    }, 5000)
-  );
+// const removeDuplicatesAPI = (emails) =>
+//   new Promise((resolve) =>
+//     setTimeout(() => {
+//       const seen = new Set();
+//       const unique = [];
+//       const duplicates = [];
+//       emails.forEach((email) => {
+//         if (seen.has(email)) duplicates.push(email);
+//         else {
+//           seen.add(email);
+//           unique.push(email);
+//         }
+//       });
+//       resolve({ unique, duplicates });
+//     }, 5000)
+//   );
+// const filterBlockedAPI = (emails) =>
+//   new Promise((resolve) =>
+//     setTimeout(() => {
+//       const allowed = [];
+//       const blocked = [];
+//       emails.forEach((email) => {
+//         if (staticBlockedEmails.includes(email)) blocked.push(email);
+//         else allowed.push(email);
+//       });
+//       resolve({ allowed, blocked });
+//     }, 5000)
+//   );
 const simulateProgress = (start, end, duration, update) =>
   new Promise((resolve) => {
     const range = end - start;
