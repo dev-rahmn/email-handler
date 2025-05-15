@@ -633,14 +633,12 @@ const List = () => {
           </AnimatePresence>
 
           {/* Name Dialog */}
-          <AnimatePresence>
-            {showNamePrompt && (
-              <motion.div
-                className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-              >
+          <AnimatePresence initial={false}>
+              {showNamePrompt && (
+                <div
+                  key="name-dialog"
+                  className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+                  >
                 <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
                   <h2 className="text-xl font-semibold mb-4">Name Your List</h2>
                   <input
@@ -665,7 +663,7 @@ const List = () => {
                     </motion.button>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             )}
           </AnimatePresence>
         </div>
