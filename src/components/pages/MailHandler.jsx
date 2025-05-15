@@ -295,18 +295,18 @@ const MailHandler = () => {
                   {selectedTemplate ? (
                     isEditing ? (
                       <div className="space-y-4">
-                        <div>
+                        <div className="w-full px-3 py-2 border rounded-lg shadow-ultraLightGreen  cursor-not-allowed
+                            shadow-sm hover:shadow-md hover:shadow-orange transition duration-300 ease-in-out">
                           <label className="block text-lightCyan mb-1"> Template Title</label>
                           <h5 className="w-full p-2  rounded text-white shadow-inner shadow-lightOrange">
                            {editValues.title}
-                          </h5>
-                            
+                          </h5>   
                         </div>
                         <div>
                           <label className="block text-lightCyan mb-1">Subject</label>
                           <input
                             type="text"
-                            className="w-full p-2 bg-darkGrey rounded text-white"
+                            className="w-full p-2 bg-darkGrey rounded text-white cursor-pointer"
                             value={editValues.subject}
                             onChange={(e) => setEditValues(v => ({ ...v, subject: e.target.value }))}
                           />
@@ -315,7 +315,7 @@ const MailHandler = () => {
                           <label className="block text-lightCyan mb-1">Body</label>
                           <textarea
                             rows={10}
-                            className="w-full p-2 bg-darkGrey rounded text-white font-mono whitespace-pre-wrap"
+                            className="w-full p-2 bg-darkGrey rounded text-white font-mono whitespace-pre-wrap cursor-pointer"
                             value={editValues.body}
                             onChange={(e) => setEditValues(v => ({ ...v, body: e.target.value }))}
                           />
